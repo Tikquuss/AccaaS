@@ -18,4 +18,7 @@ from django.urls import path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    #path('journal/',include('journalling.urls')),
+    #path('biling/',include('biling_and_payment.urls')),
+    #path('withiam/',include('communicate_with_iam.urls'))
 ]
