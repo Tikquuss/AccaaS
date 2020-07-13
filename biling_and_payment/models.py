@@ -5,7 +5,7 @@ from django.utils import timezone
 class Forfait(models.Model):
     #fields
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    nom = models.CharField(max_length=25,unique=True)
+    nom = models.CharField(max_length=26,unique=True)
     valeur = models.DecimalField(max_digits=8,decimal_places=2)
     expire_days = models.PositiveIntegerField(default = 1)
     #methods
@@ -14,12 +14,12 @@ class Forfait(models.Model):
 
 class CompteUser(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    solde = models.DecimalField(max_digits=6,decimal_places=2)
+    solde = models.DecimalField(max_digits=7,decimal_places=2)
     actif = models.BooleanField(default=True)
     date_creation = models.DateTimeField(auto_now=True)
     date_activation = models.DateTimeField(default = timezone.now)
     date_expiration = models.DateTimeField(default = timezone.now)
     nom_forfait = models.CharField(max_length=25,default="aucun forfait")
-    userId =  models.IntegerField(unique=True,default=0)
+    userId =  models.UUIDField(unique=True,editable=True)
     def __str__(self):
         return "compte de "+ str(self.userId) + ", "+ "forfait : " +self.nom_forfait+", solde: "+str(self.solde)+" Mo, "+ "compte actif" if self.actif else "compte de "+str(self.userId)+" inactif"

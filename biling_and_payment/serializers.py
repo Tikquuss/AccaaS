@@ -19,3 +19,14 @@ class CompteUserSerialiser(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = CompteUser
         fields = ("id","solde","actif","date_creation","date_activation","date_expiration","nom_forfait","userId")
+    def update(self, instance, validated_data):
+        sold = validated_data["solde"]
+        print("solde ",sold)
+        #update the user here
+        if(instance.solde <= sold):
+            instance.delete()
+            return None
+        else:
+            instance.solde = instance.solde - sold
+            instance.save()
+            return instance

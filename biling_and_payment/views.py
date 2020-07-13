@@ -6,68 +6,98 @@ from rest_framework.views import APIView
 from django.http import Http404
 from rest_framework import status
 from rest_framework.response import Response
-from .serializers import ForfaitSerialiser,CompteUserSerialiser
-from .models import Forfait,CompteUser
+from .serializers import ForfaitSerialiser, CompteUserSerialiser
+from .models import Forfait, CompteUser
 
-#viewsets of forfaits and compte users
+# viewsets of forfaits and compte users
+
 
 class ForfaitView(APIView):
-    def get(self,request):        
+    def get(self, request):
         forfaitList = Forfait.objects.all().order_by('nom')
-        serializedForfaits = ForfaitSerialiser(forfaitList,many=True)
-        return Response(serializedForfaits.data,status=status.HTTP_200_OK)
-        
-    def post(self,request):
+        serializedForfaits = ForfaitSerialiser(forfaitList, many=True)
+        return Response(serializedForfaits.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
             serializedForfait = ForfaitSerialiser(data=request.data)
             if serializedForfait.is_valid():
                 serializedForfait.save()
-                return Response(serializedForfait.data,status=status.HTTP_201_CREATED)
+                return Response(serializedForfait.data, status=status.HTTP_201_CREATED)
             else:
-                return Response(serializedForfait.errors,status=status.HTTP_400_BAD_REQUEST)
-            
+                return Response(serializedForfait.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class ForfaitDetailsView(APIView):
-    def get_object(self,id):
+    def get_object(self, id):
         try:
             return Forfait.objects.get(pk=id)
         except Forfait.DoesNotExist:
             raise Http404
 
-    def get(self,request,id):        
+    def get(self, request, id):
         forfait = self.get_object(id)
         serializedForfait = ForfaitSerialiser(forfait)
-        return Response(serializedForfait.data,status=status.HTTP_200_OK)    
-    
-    def put(self,request,id):
+        return Response(serializedForfait.data, status=status.HTTP_200_OK)
+
+    def put(self, request, id):
         forfait = self.get_object(id)
-        serializedForfait = ForfaitSerialiser(forfait,data=request.data)
+        serializedForfait = ForfaitSerialiser(forfait, data=request.data)
         if serializedForfait.is_valid():
             serializedForfait.save()
-            return Response(serializedForfait.data,status=status.HTTP_200_OK)
+            return Response(serializedForfait.data, status=status.HTTP_200_OK)
         else:
-            return Response(serializedForfait.errors,status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializedForfait.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-    def delete(self,request,id):
+    def delete(self, request, id):
         forfait = self.get_object(id)
         forfait.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-              
-        
+
 
 class CompteUserView(APIView):
-    def get(self,request):
+    def get(self, request):
         comptesList = CompteUser.objects.all().order_by('userId')
-        serializedComptes = CompteUserSerialiser(comptesList,many=True)
-        return Response(serializedComptes.data,status=status.HTTP_200_OK)
-        
-    def post(self,request):
+        serializedComptes = CompteUserSerialiser(comptesList, many=True)
+        return Response(serializedComptes.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
         serializedCompte = CompteUserSerialiser(data=request.data)
         if serializedCompte.is_valid():
             serializedCompte.save()
-            return Response(serializedCompte.data,status=status.HTTP_201_CREATED)
+            return Response(serializedCompte.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializedCompte.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CompteUserDetailsUserView(APIView):
+    def get_object(self, userid):
+        try:
+            return CompteUser.objects.get(userId=userid)
+        except CompteUser.DoesNotExist:
+            raise Http404
+
+    def get(self, request, userid):
+        compte = self.get_object(userid)
+        serializedCompte = CompteUserSerialiser(compte)
+        return Response(serializedCompte.data, status=status.HTTP_200_OK)
+
+    def put(self, request, userid):
+        compte = self.get_object(userid)
+        serializedCompte = CompteUserSerialiser(compte)
+        serializedCompte.update(compte, request.data)
+        return Response(serializedCompte.data, status=status.HTTP_200_OK)
+        """    serializedCompte = CompteUserSerialiser(compte,data=request.data)
+        if serializedCompte.is_valid():
+          
         else:
             return Response(serializedCompte.errors,status=status.HTTP_400_BAD_REQUEST)
-            
+        """
+
+    def delete(self,request,userid):
+        compte = self.get_object(id)
+        compte.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+              
 class CompteUserDetailsView(APIView):
     def get_object(self,id):
         try:

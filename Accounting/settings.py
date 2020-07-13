@@ -51,6 +51,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #'biling_and_payment.middlewares.AuditMiddleware',
+    #'biling_and_payment.middlewares.JournallingMiddleware',
 ]
 
 ROOT_URLCONF = 'Accounting.urls'

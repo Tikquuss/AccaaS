@@ -3,5 +3,7 @@ from django.urls import include, path
 from rest_framework import routers
 from . import views
 
-router = routers.DefaultRouter()
-#use router.register('route',views.function)
+urlpatterns = [
+    path('journals/', views.JournalView.as_view()),
+    path('journals/<uuid:id>/',views.JournalDetailsView.as_view()),
+]
